@@ -34,7 +34,7 @@
          point="org.eclipse.ui.commands">
       <command
             id="ShowView.command1"
-            name="name">
+            name="ShowViewCommand">
       </command>
    </extension>
    <extension
