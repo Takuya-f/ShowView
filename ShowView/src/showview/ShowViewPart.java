@@ -12,7 +12,6 @@ public class ShowViewPart extends ViewPart {
 
 	private Label label;
 	private ProgressBar bar;
-	private int[] graphData;
 
 	public ShowViewPart() {
 		// TODO 自動生成されたコンストラクター・スタブ
@@ -32,7 +31,6 @@ public class ShowViewPart extends ViewPart {
 	@Override
 	public void setFocus() {
 		// TODO 自動生成されたメソッド・スタブ
-		setSelection(60);
 	}
 
 	public void setSelection(int value){

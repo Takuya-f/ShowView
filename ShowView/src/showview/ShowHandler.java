@@ -13,6 +13,7 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.commands.IHandlerListener;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IViewReference;
@@ -45,17 +46,27 @@ public class ShowHandler implements IHandler {
 		Init_Graph(event);
 		IFile file = getSelectedFile(event);
 		String csvData = ReadFile(file);
-		graphStringData = csvData.split(",", 0);
+		setDataGraph(csvData);
 
-		for (int i = 0; i < graphStringData.length; i++) {
-			graphDataList.add(Integer.parseInt(graphStringData[i]));
-		}
-
-		viewpart.setSelection(graphDataList.get(0));
-
-
-//		viewpart.setSelection(graphIntegerData[0]);
 		return null;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		// TODO 自動生成されたメソッド・スタブ
+		return true;
+	}
+
+	@Override
+	public boolean isHandled() {
+		// TODO 自動生成されたメソッド・スタブ
+		return true;
+	}
+
+	@Override
+	public void removeHandlerListener(IHandlerListener handlerListener) {
+		// TODO 自動生成されたメソッド・スタブ
+
 	}
 
 	private void Init_Graph(ExecutionEvent event) {
@@ -72,18 +83,20 @@ public class ShowHandler implements IHandler {
 	}
 
 	private IFile getSelectedFile(ExecutionEvent event) {
-		IStructuredSelection currentSelection = (IStructuredSelection) HandlerUtil
-				.getCurrentSelection(event);
-		Object firstElement = currentSelection.getFirstElement();
-		if (!(firstElement instanceof IFile)) {
-			firstElement = null;
-		}
+		IStructuredSelection currentSelection = null;
+		if(HandlerUtil.getCurrentSelection(event) instanceof IStructuredSelection)
+			currentSelection = (IStructuredSelection) HandlerUtil
+					.getCurrentSelection(event);
+			Object firstElement = currentSelection.getFirstElement();
+			if (!(firstElement instanceof IFile)) {
+				firstElement = null;
+			}
+			return (IFile) firstElement;
 
-		return (IFile) firstElement;
 	}
 
 	private String ReadFile(IFile file) {
-		if (file != null) {
+		if (file != null && file.getFileExtension()!= null && file.getFileExtension().equals("csv")) {
 			try {
 				File f = new File(file.getLocationURI());
 				FileReader fr = new FileReader(f);
@@ -107,26 +120,19 @@ public class ShowHandler implements IHandler {
 				e.printStackTrace();
 			}
 		}
+		MessageDialog.openWarning(null, "Warning", "Select a csv file.");
 		return "";
 
 	}
 
-	@Override
-	public boolean isEnabled() {
-		// TODO 自動生成されたメソッド・スタブ
-		return true;
-	}
-
-	@Override
-	public boolean isHandled() {
-		// TODO 自動生成されたメソッド・スタブ
-		return true;
-	}
-
-	@Override
-	public void removeHandlerListener(IHandlerListener handlerListener) {
-		// TODO 自動生成されたメソッド・スタブ
-
+	private void setDataGraph(String str) {
+		graphStringData = str.split(",", 0);
+		if (graphStringData[0] != "") {
+			for (int i = 0; i < graphStringData.length; i++) {
+				graphDataList.add(Integer.parseInt(graphStringData[i]));
+			}
+			viewpart.setSelection(graphDataList.get(0));
+		}
 	}
 
 }
