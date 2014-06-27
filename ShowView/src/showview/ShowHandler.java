@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.ArrayList;
 
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -23,6 +24,8 @@ public class ShowHandler implements IHandler {
 	ShowViewPart viewpart;
 	ISelection selection;
 	Object firstElement;
+	String[] graphStringData;
+	ArrayList<Integer> graphDataList = new ArrayList<Integer>();
 
 	@Override
 	public void addHandlerListener(IHandlerListener handlerListener) {
@@ -41,8 +44,17 @@ public class ShowHandler implements IHandler {
 		// TODO 自動生成されたメソッド・スタブ
 		Init_Graph(event);
 		IFile file = getSelectedFile(event);
-		ReadFile(file);
+		String csvData = ReadFile(file);
+		graphStringData = csvData.split(",", 0);
 
+		for (int i = 0; i < graphStringData.length; i++) {
+			graphDataList.add(Integer.parseInt(graphStringData[i]));
+		}
+
+		viewpart.setSelection(graphDataList.get(0));
+
+
+//		viewpart.setSelection(graphIntegerData[0]);
 		return null;
 	}
 
@@ -57,7 +69,6 @@ public class ShowHandler implements IHandler {
 				viewpart = (ShowViewPart) view.getView(true);
 			}
 		}
-		viewpart.setSelection(30);
 	}
 
 	private IFile getSelectedFile(ExecutionEvent event) {
@@ -71,20 +82,22 @@ public class ShowHandler implements IHandler {
 		return (IFile) firstElement;
 	}
 
-	private void ReadFile(IFile file) {
+	private String ReadFile(IFile file) {
 		if (file != null) {
 			try {
 				File f = new File(file.getLocationURI());
 				FileReader fr = new FileReader(f);
 				BufferedReader br = new BufferedReader(fr);
 				String s;
+				String str = "";
 				while ((s = br.readLine()) != null) {
-					System.out.println(s);
+					str += s;
+					str += ",";
 				}
 				br.close();
+				return str;
 			} catch (FileNotFoundException e) {
 				// TODO 自動生成された catch ブロック
-				System.out.println(file.getLocationURI().toString());
 				e.printStackTrace();
 			} catch (MalformedURLException e) {
 				// TODO 自動生成された catch ブロック
@@ -94,6 +107,7 @@ public class ShowHandler implements IHandler {
 				e.printStackTrace();
 			}
 		}
+		return "";
 
 	}
 
