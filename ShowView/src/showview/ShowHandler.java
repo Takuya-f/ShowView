@@ -127,6 +127,7 @@ public class ShowHandler implements IHandler {
 
 	private void setDataGraph(String str) {
 		graphStringData = str.split(",", 0);
+		graphDataList.clear();
 		if (graphStringData[0] != "") {
 			for (int i = 0; i < graphStringData.length; i++) {
 				graphDataList.add(Integer.parseInt(graphStringData[i]));
